@@ -209,6 +209,7 @@ document.addEventListener('click',e=>{
  const goBtn=e.target.closest('[data-go]');if(goBtn){e.preventDefault();go(goBtn.dataset.go);return;}
  const pageBtn=e.target.closest('[data-page]');if(pageBtn){e.preventDefault();go('#/'+pageBtn.dataset.page);return;}
  if(e.target.closest('#mobile-more')){if(moreOpen)closeMore();else openMore();return;}
+ const clearFilters=e.target.closest('[data-action="clear-pyq-filters"]');if(clearFilters){subjectFilter='ALL';questionType='ALL';questionSearch='';pyqYear='ALL';pyqMarks='ALL';pyqPriority='ALL';pyqUnit='ALL';pyqTopic='ALL';pyqSource='ALL';pyqCompletion='ALL';go('#/pyqs');render();return;}
  const action=e.target.closest('[data-action]');if(action){doAction(action.dataset.action,action.dataset.topic||action.dataset.question||'');return;}
  const hours=e.target.closest('[data-onboard-hours]');if(hours){onboardingDraft.hours=Number(hours.dataset.onboardHours);render();return;}
  const mode=e.target.closest('[data-onboard-mode]');if(mode){onboardingDraft.mode=mode.dataset.onboardMode;render();return;}
@@ -237,8 +238,13 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{
  const st=e.target.closest('[data-topic-status]');if(st){topicStatusSet(st.dataset.topicStatus,st.value);return;}
- if(e.target.id==='pyq-subject-filter'){subjectFilter=e.target.value;render();return;}
+ if(e.target.id==='pyq-subject-filter'){subjectFilter=e.target.value;pyqUnit='ALL';pyqTopic='ALL';render();return;}
+ if(e.target.id==='pyq-unit-filter'){pyqUnit=e.target.value;render();return;}
+ if(e.target.id==='pyq-topic-filter'){pyqTopic=e.target.value;render();return;}
+ if(e.target.id==='pyq-year-filter'){pyqYear=e.target.value;render();return;}
  if(e.target.id==='pyq-marks-filter'){pyqMarks=e.target.value;render();return;}
+ if(e.target.id==='pyq-priority-filter'){pyqPriority=e.target.value;render();return;}
+ if(e.target.id==='pyq-source-filter'){pyqSource=e.target.value;render();return;}
  if(e.target.id==='pyq-status-filter'){pyqCompletion=e.target.value;render();return;}
  if(e.target.id==='pdf-upload'){uploadPdfs(e.target.files);e.target.value='';return;}
  if(e.target.id==='backup-import'&&e.target.files?.[0]){importBackup(e.target.files[0]);e.target.value='';return;}
