@@ -11,21 +11,17 @@
  const ordinal=n=>n===1?"1st":n===2?"2nd":n===3?"3rd":n+"th";
  const allSource=[];
  function add(x){
-   const current=(x.semester===4 && String(x.code).split("/").includes(CURRENT_CODES[x.s]));
-   const sourceType=current
-     ? "Verified 4th-semester PYQ · "+x.year
-     : "Supplementary PYQ · "+ordinal(x.semester)+" semester "+x.year+" · code "+x.code;
+   // These additional question statements were prepared from syllabus concepts.
+   // Until the original wording/options are reconciled line-by-line with the scan,
+   // keep them as curated practice and do not attach guessed paper/year/page metadata.
    const q={
-     id:x.id,s:x.s,type:"MCQ",q:x.q,o:x.o,a:x.a,e:x.e,
-     marks:x.marks||2,year:x.year,semester:x.semester,courseCode:x.code,
-     paper:x.paper||("B.Tech "+ordinal(x.semester)+" Semester Examination, "+x.year),
-     sourceName:"CSE-4TH-SEM-ALL-PYQs.pdf",sourcePage:x.pdfPage,paperPage:x.paperPage||1,
-     sourceType,verifiedSource:true,answerVerified:true,
-     answerVerification:"Answer independently checked against standard subject knowledge; no official answer key was supplied.",
+     id:x.id.replace(/^pyq-/,"curated-mcq-"),s:x.s,type:"MCQ",q:x.q,o:x.o,a:x.a,e:x.e,
+     marks:x.marks||2,sourceType:"Curated practice · not verbatim PYQ",
+     verifiedSource:false,answerVerified:true,
+     answerVerification:"Answer checked against standard subject knowledge; question is curated practice, not a verified verbatim PYQ.",
      topicId:x.topicId||null,priority:x.priority||"Medium",difficulty:x.difficulty||"Medium",
-     originalWording:true,sourceConfidence:"high"
+     originalWording:false,sourceConfidence:"not-a-source-transcription"
    };
-   if(!current) q.supplementaryReason="The scanned source paper's semester or course code does not match the current BEU CSE Semester 4 subject configuration.";
    D.questions.push(q);allSource.push(q);
  }
  // COMPUTER ORGANIZATION & ARCHITECTURE — current 4th-semester papers.
@@ -199,16 +195,11 @@
   ["f","Which approach supports complex problem solving?",["Avoiding all evidence","Ignoring alternatives","Breaking the problem into manageable parts","Rushing to conclusions"],2,"Decomposition makes complex problems easier to analyse and solve systematically.","ETC-2-3","Easy"],
   ["g","The primary purpose of a formal business letter is:",["Sharing personal stories","Providing informal greetings only","Formal professional communication","Replacing every meeting"],2,"A business letter conveys a formal professional message or request in a documented format.","ETC-4-2","Easy"]
  ].forEach(([id,q,o,a,e,topicId,difficulty])=>add({...E23,id:"pyq-etc-2023-"+id,q,o,a,e,topicId,difficulty}));
- // Update the two earlier source questions to the accurately inspected 2022 4th-semester paper.
- const oldEncoding=D.questions.find(x=>x.id==="coa-pyq-2022-q1a");
- if(oldEncoding){Object.assign(oldEncoding,{year:2022,semester:4,courseCode:"105401/106401",paper:"B.Tech 4th Semester Examination, 2022 (New Course)",sourceName:"CSE-4TH-SEM-ALL-PYQs.pdf",sourcePage:7,paperPage:1,sourceType:"Verified 4th-semester PYQ · 2022",verifiedSource:true,answerVerified:true,topicId:"COA-0-0",answerVerification:"EBCDIC is 8-bit; standard ASCII is 7-bit."});}
- const questionableBus=D.questions.find(x=>x.id==="coa-pyq-2022-q1b");
- if(questionableBus){questionableBus.type="Unverified";questionableBus.sourceType="Unscored source item · answer needs source-context verification";questionableBus.verifiedSource=false;questionableBus.answerVerified=false;questionableBus.e="The scan's wording/options do not provide enough context to verify a unique answer confidently; excluded from scored MCQ practice.";}
  D.mcqBankInfo={
    extractedFrom:["CSE-4TH-SEM-ALL-PYQs.pdf","COA PYQ.pdf"],
    totalAdded:allSource.length,
-   answerPolicy:"Included items have an independently checked answer; supplied scans did not contain a verified official answer key.",
-   currentSemesterOnly:"The 2025, 2024, 2023 and 2022 COA papers in the all-subject scan match the current 4th-semester subject/code. Extracted CN, DBMS, DAA, FLAT and ETC questions are clearly tagged supplementary whenever source semester or course code differs.",
-   contentCaveat:"Only legible MCQs with defensible answers are scored. Unclear scans/options are not added as scored questions."
+   verifiedSourceMcqs:0,
+   answerPolicy:"These additional items are scored as curated practice after answer review; the uploaded PDFs did not include an official answer key.",
+   contentCaveat:"The added practice statements have not all been reconciled line-by-line against original scans. They are deliberately labelled curated practice, not authentic PYQs. Only an item with independently checked original wording and source metadata is labelled as a PYQ."
  };
 })();
