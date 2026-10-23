@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, BookOpen, CalendarDays, CheckCircle2, Clock3, Flame, Play, RotateCcw, Target } from 'lucide-react';
 import { EXAMS, SUBJECTS, TOPICS, daysBetween, displayDate, isArchivedSession } from '../../data/content';
@@ -31,7 +31,7 @@ export function HomePage(){
  const topicDone=TOPICS.filter(t=>['learning','partial','review','mastered'].includes(topicProgress[t.id]?.status||'not-started')).length;
  const topicMastered=TOPICS.filter(t=>topicProgress[t.id]?.status==='mastered').length;
  const coverage=pct(topicDone/Math.max(1,TOPICS.length)*100);
- const upcoming=useMemo(()=>EXAMS.map(e=>({...e,days:daysBetween(new Date(),e.date)}).filter(e=>e.days>=0).sort((a,b)=>a.date.localeCompare(b.date))[0],[today]);
+ const upcoming=useMemo(()=>EXAMS.map(e=>({...e,days:daysBetween(new Date(),e.date)})).filter(e=>e.days>=0).sort((a,b)=>a.date.localeCompare(b.date))[0],[today]);
  const subjectCoverage=SUBJECTS.map(subject=>{
   const all=TOPICS.filter(t=>t.subjectId===subject.id),done=all.filter(t=>['learning','partial','review','mastered'].includes(topicProgress[t.id]?.status||'not-started')).length;
   return {...subject,coverage:pct(done/Math.max(1,all.length)*100)};
@@ -50,7 +50,7 @@ export function HomePage(){
   <section className="hero-banner"><p className="eyebrow">YOUR SEMESTER, WELL PLANNED</p><h1>{greetingText}.</h1><p>One realistic study block at a time. Your syllabus progress, practice results and notes stay on this device.</p>
    <div className="hero-actions"><button className="primary-button" onClick={()=>navigate('/planner')}>View today’s plan <ArrowRight size={16}/></button><button className="btn" onClick={()=>navigate('/subjects')}>Continue a subject</button></div>
   </section>
-  {archive?<section className="banner-soft"><h2>Exam-session practice mode</h2><p>The configured 29 October–7 November 2026 exam session is over. The app won’t create replacement dates; use the syllabus, PYQs and revision tools for ongoing practice.</p></section>:upcoming&&<section className="card next-exam-card"><div className="row"><div className="subject-mark" style={{'--subject-color':upcoming.color} as React.CSSProperties}><CalendarDays size={20}/></div><div className="grow"><p className="eyebrow">NEXT EXAMINATION</p><h2>{upcoming.name}</h2><p className="muted">Course {upcoming.code} · {displayDate(upcoming.date)} · 2:00–5:00 PM</p></div></div><div className="exam-countdown"><strong>{upcoming.days===0?'Today':upcoming.days}</strong><span>{upcoming.days===0?'EXAM DAY':'DAYS LEFT'}</span></div></section>}
+  {archive?<section className="banner-soft"><h2>Exam-session practice mode</h2><p>The configured 29 October–7 November 2026 exam session is over. The app won’t create replacement dates; use the syllabus, PYQs and revision tools for ongoing practice.</p></section>:upcoming&&<section className="card next-exam-card"><div className="row"><div className="subject-mark" style={{'--subject-color':upcoming.color} as CSSProperties}><CalendarDays size={20}/></div><div className="grow"><p className="eyebrow">NEXT EXAMINATION</p><h2>{upcoming.name}</h2><p className="muted">Course {upcoming.code} · {displayDate(upcoming.date)} · 2:00–5:00 PM</p></div></div><div className="exam-countdown"><strong>{upcoming.days===0?'Today':upcoming.days}</strong><span>{upcoming.days===0?'EXAM DAY':'DAYS LEFT'}</span></div></section>}
   <section className="stat-grid">
    <Stat label="TOPIC COVERAGE" value={coverage+'%'} caption={topicDone+' of '+TOPICS.length+' topics started or reviewed'} icon={BookOpen}/>
    <Stat label="TODAY’S FOCUS" value={Math.round(availableMinutes/60)+' h'} caption={Math.max(0,Math.round((availableMinutes-scheduledMinutes)/60))+' h capacity left after planned blocks'} icon={Clock3}/>
