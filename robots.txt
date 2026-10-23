@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://beu-exam-study-tracker.netlify.app/sitemap.xml
+Sitemap: https://beu-cse-sem4-exam-tracker.vercel.app/sitemap.xml
