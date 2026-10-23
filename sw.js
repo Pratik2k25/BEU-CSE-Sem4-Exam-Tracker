@@ -1,9 +1,9 @@
 const CACHE = 'beu-exam-prep-shell-v2';
 const SHELL = [
-  '/', '/index.html', '/styles.css', '/app.js', '/data.js',
-  '/manifest.webmanifest', '/assets/logo.svg', '/assets/favicon.svg',
-  '/assets/app-icon.svg', '/robots.txt', '/sitemap.xml'
-];
+  '', 'index.html', 'styles.css', 'app.js', 'data.js',
+  'manifest.webmanifest', 'assets/logo.svg', 'assets/favicon.svg',
+  'assets/app-icon.svg', 'robots.txt', 'sitemap.xml'
+].map(path => new URL(path, self.registration.scope).toString());
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
