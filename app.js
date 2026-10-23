@@ -302,7 +302,7 @@ function startQuiz(){
   started:now,startedAt:now,segmentStartedAt:now,activeSecondsAccumulated:0,timed:!!minutes,timeLimitMinutes:minutes,
   deadlineAt:minutes?now+minutes*60000:null,pausedRemainingMs:null,status:'running',
   filters:{subject:practiceSubject,unit:practiceUnit,topic:practiceTopic,year:practiceYear,difficulty:practiceDifficulty,source:practiceSource,mode:practiceMode,count:practiceCount,shuffleChoices:practiceShuffleChoices},
-  filtersSummary:{unit:practiceUnit,topic:practiceTopic,year:practiceYear,difficulty:practiceDifficulty,source:practiceSource,mode:practiceMode}
+  filtersSummary:{subject:practiceSubject,unit:practiceUnit,topic:practiceTopic,year:practiceYear,difficulty:practiceDifficulty,source:practiceSource,mode:practiceMode,count:practiceCount,shuffleChoices:practiceShuffleChoices}
  };
  state.activeQuiz=quizState;save();go('#/practice');
  if(all.length<count)toast('Only '+all.length+' matching MCQs are available; the set contains all of them.');
@@ -375,6 +375,11 @@ function doAction(a,b){
  else if(a==='skip-quiz-question'){if(quizState){quizState.index=Math.min(quizState.items.length-1,quizState.index+1);state.activeQuiz=quizState;save();render();}}
  else if(a==='submit-quiz')finishQuiz(false);
  else if(a==='clear-practice-filters'){practiceSubject='ALL';practiceUnit='ALL';practiceTopic='ALL';practiceYear='ALL';practiceDifficulty='ALL';practiceSource='ALL';practiceMode='all';practiceCount='10';practiceTimed=false;practiceMinutes=30;practiceShuffleChoices=false;render();toast('MCQ filters cleared.');}
+ else if(a==='repeat-saved-quiz'){
+  const rec=state.scores.find(x=>x.id===b||x.id===$('#modal-root')?.dataset?.result);if(!rec){toast('Saved attempt not found.');return;}
+  const ff=rec.filters||{};practiceSubject=rec.subject||'ALL';practiceUnit=ff.unit||'ALL';practiceTopic=ff.topic||'ALL';practiceYear=ff.year||'ALL';practiceDifficulty=ff.difficulty||'ALL';practiceSource=ff.source||'ALL';practiceMode='all';practiceCount=rec.total>30?'ALL':String(rec.total||10);practiceTimed=!!rec.timed;practiceMinutes=Number(rec.timeLimitMinutes||30);practiceShuffleChoices=!!ff.shuffleChoices;
+  quizState=null;state.activeQuiz=null;save();go('#/practice');render();startQuiz();
+ }
  else if(a==='flip-revision'){const el=$('#revision-cues');if(el)el.hidden=!el.hidden;}
  else if(a==='revision-next'){revisionIndex++;render();}
  else if(a==='revision-prev'){revisionIndex=Math.max(0,revisionIndex-1);render();}
