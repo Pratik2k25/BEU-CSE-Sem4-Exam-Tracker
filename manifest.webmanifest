@@ -4,15 +4,31 @@
   "short_name": "BEU Prep",
   "description": "A private, local-first study planner, syllabus tracker and practice companion for BEU B.Tech CSE Semester 4.",
   "lang": "en-IN",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f5f7f9",
   "theme_color": "#12643d",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
-    {"src": "/assets/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
-    {"src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+    {
+      "src": "./assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }
