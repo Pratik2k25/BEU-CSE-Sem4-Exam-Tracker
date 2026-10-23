@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useStudentStore } from '../state/store';
 import { AppShell } from '../components/AppShell';
@@ -29,8 +30,10 @@ function ExamListPage() {
   </main>;
 }
 function SavedPage(){const bookmarks=useStudentStore(s=>s.bookmarks);return <main className="page-stack"><section className="page-heading"><div><p className="eyebrow">SAVED MATERIAL</p><h1>Bookmarks</h1></div></section><section className="card"><p className="muted">Saved IDs</p>{bookmarks.length?bookmarks.map(id=><div className="list-row" key={id}><span>{id}</span></div>):<p>You haven’t saved any questions or topics yet.</p>}</section></main>;}
+let hydration:Promise<void>|null=null;
 export default function App(){
  const ready=useStudentStore(s=>s.hydrated);
+ useEffect(()=>{hydration??=useStudentStore.getState().hydrate();void hydration;},[]);
  return <Routes>
   <Route path="/onboarding" element={ready?<OnboardingPage/>:<div className="app-loading">Opening your study desk…</div>} />
   <Route element={<SetupGuard><AppShell/></SetupGuard>}>
@@ -49,6 +52,7 @@ export default function App(){
    <Route path="/settings" element={<Navigate to="/profile" replace/>}/>
    <Route path="/notes" element={<NotesPage/>}/>
    <Route path="/resources" element={<ResourcesPage/>}/>
+   <Route path="/resources/:resourceId" element={<ResourcesPage/>}/>
    <Route path="/revision" element={<RevisionPage/>}/>
    <Route path="/progress" element={<ProgressPage/>}/>
    <Route path="/exams" element={<ExamListPage/>}/>
