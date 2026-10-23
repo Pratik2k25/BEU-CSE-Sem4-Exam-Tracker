@@ -262,6 +262,6 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installProm
 const mobileMore=$('#mobile-more');if(mobileMore)mobileMore.setAttribute('aria-label','More destinations');
 $('#open-preferences')?.addEventListener('click',()=>go('#/settings'));
 $('#install-button')?.addEventListener('click',()=>doAction('install-prompt'));
-if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 render();
 })();
