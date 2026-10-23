@@ -26,4 +26,4 @@ assert(html.includes('./manifest.webmanifest'), 'HTML loads manifest using a rel
 for (const path of ['assets/logo.svg', 'assets/favicon.svg', 'assets/app-icon.svg', 'index.html', 'styles.css', 'app.js', 'data.js', 'manifest.webmanifest', 'sw.js']) {
   assert(existsSync(resolve(path)), 'required file exists: ' + path);
 }
-assert(sw.includes("new URL('./index.html', self.registration.scope)") || sw.includes("new URL('./', self.registration.scope)"), 'service worker builds shell URLs from registration scope');
+assert(sw.includes("new URL(path, self.registration.scope)"), 'service worker builds shell URLs from registration scope');
