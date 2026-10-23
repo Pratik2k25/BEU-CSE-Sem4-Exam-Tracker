@@ -264,8 +264,80 @@ function hideModal(){$('#modal-root').innerHTML='';}
 function topicStatusSet(id,status){const t=topicById(id);if(!t)return;state.topics[id]={...(state.topics[id]||{}),status,updated:today()};if(status==='Needs revision'){state.flashcards[id]={due:today(),interval:1};}save();render();toast('Topic status saved.');}
 function addMistake(questionId='',topicId=''){const q=questionBank().find(x=>x.id===questionId);showModal(noteModal('mistake',topicId||q?.id&&''||'', ''));}
 function newSession(){showModal('<div class="modal-backdrop" data-dismiss-modal><section class="modal" role="dialog" aria-modal="true"><div class="eyebrow">STUDY LOG</div><h2>Log a focused session</h2><p class="modal-intro">Record actual study time, not intended time.</p><form id="session-form" class="form-grid"><div class="field"><label for="session-minutes">Minutes</label><input id="session-minutes" name="minutes" class="field-control" type="number" min="5" max="720" step="5" value="45" required></div><div class="field"><label for="session-subject">Subject</label><select name="subject" id="session-subject" class="field-control"><option value="ALL">General study</option>'+SUBJECTS.map(s=>'<option value="'+s.id+'">'+esc(s.short)+'</option>').join('')+'</select></div><div class="field"><label for="session-note">What did you study?</label><input id="session-note" name="note" class="field-control" maxlength="300" placeholder="Topic, practice set or review"></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" type="submit">Save session</button></div></form></section></div>');}
-function startQuiz(){let s=$('#quiz-subject')?.value||'ALL',n=Number($('#quiz-count')?.value||10),all=D.questions.filter(q=>q.type==='MCQ'&&(s==='ALL'||q.s===s));if(!all.length){toast('No MCQs found for this subject.');return;}const shuffled=all.slice().sort(()=>Math.random()-.5).slice(0,Math.min(n,all.length));quizState={subject:s,items:shuffled,index:0,answers:{},correct:0,done:false,started:Date.now()};go('#/practice');render();}
-function finishQuiz(){if(!quizState)return;quizState.done=true;const total=quizState.items.length,correct=quizState.correct,id='attempt-'+Date.now();state.scores.push({id,date:today(),subject:quizState.subject,correct,total,percent:Math.round(correct/total*100),duration:Math.round((Date.now()-quizState.started)/60000),answers:{...quizState.answers},items:quizState.items.map(q=>({id:q.id,s:q.s,type:q.type,q:q.q,o:q.o,a:q.a,e:q.e,outline:q.outline,evidence:q.evidence}))});quizState.items.forEach(q=>{if(quizState.answers[q.id]!==q.a){const t=ALL_TOPICS.find(t=>t.s===q.s&&q.q.toLowerCase().includes(t.name.split(/[ ,:;]/)[0].toLowerCase()));if(t)state.flashcards[t.id]={due:today(),interval:1};}});save();go('#/results/'+id);}
+function stopQuizTimer(){if(quizTimerInterval!==null){clearInterval(quizTimerInterval);quizTimerInterval=null;}}
+function syncQuizTimer(){
+ stopQuizTimer();
+ if(!quizState||quizState.done||quizState.status==='paused'||!quizState.timed||!quizState.deadlineAt)return;
+ const tick=()=>{
+  if(!quizState||quizState.done||quizState.status==='paused'){stopQuizTimer();return;}
+  const ms=Math.max(0,quizState.deadlineAt-Date.now()),seconds=Math.ceil(ms/1000),el=$('#quiz-timer');
+  if(el)el.textContent=Math.floor(seconds/60).toString().padStart(2,'0')+':'+(seconds%60).toString().padStart(2,'0')+' left';
+  if(seconds<=0){stopQuizTimer();finishQuiz(true);}
+ };
+ tick();if(quizState&&!quizState.done&&quizState.status!=='paused')quizTimerInterval=setInterval(tick,1000);
+}
+function startQuiz(){
+ if(quizState&&!quizState.done){toast('An unfinished test is already saved. Resume or exit it first.');go('#/practice');return;}
+ const all=practiceSetQuestions();
+ if(!all.length){toast('No answer-checked MCQs match these filters. Clear filters or include supplementary/curated practice.');return;}
+ const count=practiceCount==='ALL'?all.length:Math.min(Number(practiceCount)||10,all.length);
+ const selected=shuffleCopy(all).slice(0,count);
+ const items=selected.map(q=>{
+  const pairs=q.o.map((text,index)=>({text,index}));
+  const ordered=practiceShuffleChoices?shuffleCopy(pairs):pairs;
+  return {...q,o:ordered.map(x=>x.text),a:ordered.findIndex(x=>x.index===q.a),topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null};
+ });
+ const minutes=practiceTimed?Math.max(1,Number(practiceMinutes)||30):null,now=Date.now();
+ quizState={
+  id:'active-'+now,attemptType:'mcq-practice',subject:practiceSubject,items,index:0,answers:{},correct:0,done:false,
+  started:now,startedAt:now,segmentStartedAt:now,activeSecondsAccumulated:0,timed:!!minutes,timeLimitMinutes:minutes,
+  deadlineAt:minutes?now+minutes*60000:null,pausedRemainingMs:null,status:'running',
+  filters:{subject:practiceSubject,unit:practiceUnit,topic:practiceTopic,year:practiceYear,difficulty:practiceDifficulty,source:practiceSource,mode:practiceMode,count:practiceCount,shuffleChoices:practiceShuffleChoices},
+  filtersSummary:{unit:practiceUnit,topic:practiceTopic,year:practiceYear,difficulty:practiceDifficulty,source:practiceSource,mode:practiceMode}
+ };
+ state.activeQuiz=quizState;save();go('#/practice');
+ if(all.length<count)toast('Only '+all.length+' matching MCQs are available; the set contains all of them.');
+}
+function pauseQuizForExit(){
+ if(!quizState||quizState.done)return;
+ const now=Date.now();
+ if(quizState.timed&&quizState.deadlineAt){quizState.pausedRemainingMs=Math.max(0,quizState.deadlineAt-now);quizState.deadlineAt=null;}
+ if(quizState.segmentStartedAt){quizState.activeSecondsAccumulated=(quizState.activeSecondsAccumulated||0)+(now-quizState.segmentStartedAt)/1000;quizState.segmentStartedAt=null;}
+ quizState.status='paused';state.activeQuiz=quizState;save();stopQuizTimer();go('#/dashboard');
+}
+function resumeQuiz(){
+ if(!quizState||quizState.done)return;
+ if(quizState.timed){const rem=Math.max(0,quizState.pausedRemainingMs||0);if(rem<=0){quizState.status='running';quizState.deadlineAt=Date.now();finishQuiz(true);return;}quizState.deadlineAt=Date.now()+rem;quizState.pausedRemainingMs=null;}
+ quizState.segmentStartedAt=Date.now();quizState.status='running';state.activeQuiz=quizState;save();go('#/practice');
+}
+function finishQuiz(force=false){
+ if(!quizState||quizState.done)return;
+ const total=quizState.items.length,answers=quizState.answers||{},attempted=quizState.items.filter(q=>typeof answers[q.id]==='number').length,unanswered=total-attempted,correct=quizState.items.filter(q=>answers[q.id]===q.a).length;
+ if(!force&&unanswered>0&&!confirm('You have '+unanswered+' unanswered question(s). Submit anyway and reveal the answer key?'))return;
+ stopQuizTimer();
+ const now=Date.now();
+ if(quizState.segmentStartedAt){quizState.activeSecondsAccumulated=(quizState.activeSecondsAccumulated||0)+(now-quizState.segmentStartedAt)/1000;quizState.segmentStartedAt=null;}
+ const durationSeconds=Math.max(0,Math.round(quizState.activeSecondsAccumulated||0)),accuracy=attempted?Math.round(correct/attempted*100):0,percent=total?Math.round(correct/total*100):0,id='attempt-'+now;
+ const topicMap={};quizState.items.forEach(q=>{
+  const meta=questionMeta(q),topic=meta.topic,key=topic?.id||q.topicId||null;
+  if(!key)return;
+  if(!topicMap[key])topicMap[key]={topicId:key,label:topic?.name||q.q,subject:q.s,total:0,attempted:0,correct:0,incorrect:0,unanswered:0};
+  const x=topicMap[key];x.total++;
+  if(typeof answers[q.id]!=='number')x.unanswered++;
+  else {x.attempted++;if(answers[q.id]===q.a)x.correct++;else x.incorrect++;}
+ });
+ quizState.items.forEach(q=>{
+  const ans=answers[q.id];
+  if(typeof ans==='number')state.questionAnswers[q.id]=ans;
+  const topic=questionMeta(q).topic||topicById(q.topicId);
+  if(topic&&typeof ans==='number'&&ans!==q.a)state.flashcards[topic.id]={due:today(),interval:1,reason:'incorrect-mcq',questionId:q.id};
+ });
+ const savedItems=quizState.items.map(q=>({id:q.id,s:q.s,type:'MCQ',q:q.q,o:q.o,a:q.a,e:q.e,marks:questionMarks(q),year:q.year||null,semester:q.semester||null,courseCode:q.courseCode||null,paper:q.paper||null,sourceName:q.sourceName||null,sourcePage:q.sourcePage||null,paperPage:q.paperPage||null,sourceType:q.sourceType||'Curated practice',verifiedSource:!!q.verifiedSource,answerVerified:q.answerVerified!==false,topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null,priority:q.priority||null,difficulty:q.difficulty||'Medium'}));
+ const record={id,date:today(),attemptType:'mcq-practice',subject:quizState.subject,correct,total,attempted,unanswered,accuracy,percent,duration:Math.round(durationSeconds/60),durationSeconds,timed:!!quizState.timed,timeLimitMinutes:quizState.timeLimitMinutes||null,filters:quizState.filtersSummary||{},answers:{...answers},items:savedItems,topicPerformance:Object.values(topicMap),finishedAt:now,startedAt:quizState.startedAt||quizState.started};
+ state.scores.push(record);state.activeQuiz=null;
+ quizState={...quizState,...record,done:true,status:'submitted',finishedAt:now,correct,attempted,unanswered,accuracy,percent,topicPerformance:record.topicPerformance};
+ save();go('#/results/'+id);
+}
 function resetData(){if(!confirm('This will delete your saved study progress, notes, mistakes and results from this browser. Export a backup first. Continue?'))return;localStorage.removeItem(KEY);state=BASE();quizState=null;save();go('#/welcome');toast('Local study progress was reset.');}
 function doAction(a,b){
  if(a==='close-modal')hideModal();
