@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowRight, Bookmark, BookOpen, ChevronRight, CircleHelp, Clock3, FileText, Play, RotateCcw, Sparkles } from 'lucide-react';
-import { SUBJECTS, TOPICS, QUESTIONS, getQuestionsForTopic, type SubjectId } from '../../data/content';
+import { ArrowRight, Bookmark, BookOpen, ChevronRight, Clock3, FileText, Play, Sparkles } from 'lucide-react';
+import { SUBJECTS, TOPICS, QUESTIONS, type SubjectId } from '../../data/content';
 import { useStudentStore } from '../../state/store';
 import { dateValue, daysBetween } from '../../data/content';
 
@@ -64,11 +64,11 @@ export function UnitPage(){
 export function TopicPage(){
  const {topicId}=useParams(),navigate=useNavigate();
  const topic=TOPICS.find(t=>t.id===topicId),progress=useStudentStore(s=>s.topicProgress),setFeedback=useStudentStore(s=>s.setTopicFeedback),bookmarks=useStudentStore(s=>s.bookmarks),toggleBookmark=useStudentStore(s=>s.toggleBookmark);
+ const questions=useMemo(()=>topic?QUESTIONS.filter(q=>q.subjectId===topic.subjectId&&q.topicId===topic.id):[],[topic?.id,topic?.subjectId]);
  const startFocus=useStudentStore(s=>s.startFocus),activeSessionId=useStudentStore(s=>s.activeSessionId),sessions=useStudentStore(s=>s.sessions);
  const notes=useStudentStore(s=>s.notes);
  if(!topic)return <main className="page-stack"><h1>Topic not found</h1><Link to="/subjects">Return to subjects</Link></main>;
  const subject=SUBJECTS.find(s=>s.id===topic.subjectId)!,unit=subject.units[topic.unitIndex],status=progress[topic.id]?.status||'not-started',feedback=progress[topic.id]?.feedback;
- const questions=useMemo(()=>QUESTIONS.filter(q=>q.subjectId===topic.subjectId&&q.topicId===topic.id),[topic.id,topic.subjectId]);
  const saved=bookmarks.includes(topic.id),activeSession=sessions.find(s=>s.id===activeSessionId);
  const noteCount=notes.filter(n=>n.topicId===topic.id).length;
  const chooseFeedback=(value:'understood'|'partial'|'again')=>{
