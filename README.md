@@ -1,28 +1,32 @@
-# BEU CSE Semester 4 Exam Tracker
+# BEU Exam Prep
 
-A free, mobile-first Progressive Web App (PWA) to help Bihar Engineering University B.Tech Computer Science students plan study sessions, track syllabus topics, practise questions and check recall ahead of semester exams.
+BEU Exam Prep is an installable, mobile-first study PWA for students preparing for the BEU B.Tech CSE Semester 4 papers. V2 uses a student-first application structure and a professional green, white and coral UI with a floating pill navigation on mobile and a sidebar on desktop.
 
-## Features
-- First-run planner: choose 4, 6, 8 or 12 study hours/day and Balanced, Marks-focused or Crash-course preparation.
-- Unit-wise checklist for COA (105401), FLAT (105402), DAA (105403), DBMS (105404), ETC (105405) and Computer Networks (105406).
-- Topic states: Not started, Learning, Practiced, Recall passed, Exam-ready and Needs revision; visible subject and overall progress.
-- Exam schedule transcribed from the supplied routine (29 Oct–7 Nov 2026, 2–5 PM; verify later university/college notices).
-- MCQs with explanations, short definition questions, long-answer outlines, quiz mode, notes and mistake log.
-- ChatGPT study links, charcoal theme, mobile navigation, installable PWA and offline app shell.
-- Local-first progress with JSON backup export/import; no login or backend dependency.
-- SEO metadata, social preview tags, schema.org JSON-LD, robots.txt and sitemap.xml.
+## Student features
+- First-run setup for 4, 6, 8 or 12 study hours/day and Balanced, Marks-focused or Crash-course strategies.
+- Dashboard, daily study plan, six theory-subject views, unit syllabus checklist and topic learning pages.
+- Exam calendar for the schedule supplied by the user (29 Oct–7 Nov 2026, 2–5 PM); dates should be checked against later official notices.
+- Filterable question bank, short-definition practice, MCQs with explanations, long-answer outlines, timed quiz sets, answer review and saved questions.
+- Revision queue, active recall cards, personal notes and mistake log, session time log, subject progress and quiz accuracy analytics.
+- Private in-browser PDF shelf with file listing, preview, download and delete.
+- JSON backup export/import for study data. Original PDFs are stored separately in IndexedDB and should be backed up separately.
+- Responsive layouts, keyboard focus states, reduced-motion preference, PWA manifest, app icons and an offline app shell.
+
+## Academic content and provenance
+The syllabus hierarchy is based on the syllabus compilation provided by the user; it is not represented as a university-hosted source. Topics carry study-guidance priority labels, not official marks weightage. The included MCQs, short definitions and long-answer structures form a curated practice seed. They are **not** a complete verbatim transcription of the all-subject PYQ PDF. That compilation includes papers with potentially different semester/course codes; questions should only be labelled as verified PYQs after checking the original paper, course code, year and page.
 
 ## Run locally
-Serve the repository root over HTTP (service workers do not run from file URLs). Run `python -m http.server 8080` and open http://localhost:8080. Test installation/offline support on localhost or HTTPS.
+Serve the repository over HTTP (service workers do not work from a file URL):
+```sh
+python -m http.server 8080
+```
+Open http://localhost:8080. Test PWA install and offline behaviour on localhost or HTTPS.
 
-## Privacy and persistence
-Preferences, topic progress, daily checklist state, notes, mistakes and quiz results are saved in browser localStorage using the stable key `beu-cse-sem4-tracker-local-v1`. Normal app deployments do not clear this key. Data is specific to the current browser/profile/device; it does not sync between devices. Clearing site data or switching browsers/devices can remove it. Export a JSON backup from Settings before clearing or moving devices.
+## Local data and privacy
+Small preferences, topic progress, study blocks, notes, mistakes, bookmarks, quiz results and study sessions are saved with localStorage under the stable key `beu-cse-sem4-tracker-local-v1`. PDF blobs are stored in IndexedDB. No account, backend, cloud sync or server upload is configured. Clearing this site's browser data may erase local records. Export the JSON backup regularly and keep original PDFs elsewhere.
 
-## Content integrity
-The topic map is condensed from the supplied B.Tech CSE Semester 4 syllabus PDF. Dates and codes are transcribed from the supplied exam routine; verify later university/college notices. Priority levels are mentor guidance, not official BEU marks weightage or a promise about exam questions. Practice-question wording is not represented as verbatim past-paper text unless explicitly identified as such. Refer to faculty and official materials for final preparation.
+## Scope decisions for V2
+Student-facing experience only. No admin UI, account roles, shared-content editing or authentication is included. Offline support covers the cached application shell; PDFs are available offline only after they have been stored in the current browser and device. Hindi explanations and server-backed multi-semester content are future work.
 
-## Deployment
-This is a static site; deploy the repository root. Netlify configuration is included in `netlify.toml`. For continuous deployment, connect this GitHub repository in the hosting provider and use the root directory as the publish directory.
-
-## License
-Add a license if you intend to grant specific reuse or contribution rights. Public visibility alone does not automatically grant a software license.
+## Deploy
+The repository is connected to the Vercel project for this app. Changes merged to `main` are intended for production; verify deployment status and smoke-test the live URL after release.
