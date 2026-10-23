@@ -117,3 +117,48 @@ html[data-theme="dark"] .app-footer { border-color:var(--line); }
 html[data-theme="dark"] .exam-date-block,html[data-theme="dark"] .subject-icon,html[data-theme="dark"] .metric-icon { background:#223c2d; }
 html[data-theme="dark"] .modal { background:#1d2421;border-color:#394b3f;color:var(--text); }
 html[data-theme="dark"] .modal-backdrop { background:#050d09dc; }
+
+/* Polished dark theme overrides */
+html[data-theme="dark"] .btn { background:#26302a;border-color:#3a4840;color:#eff8f1;box-shadow:none; }
+html[data-theme="dark"] .btn:hover { background:#303d35;border-color:#4f6858; }
+html[data-theme="dark"] .btn-primary { background:#167044;border-color:#167044;color:#fff; }
+html[data-theme="dark"] .btn-primary:hover { background:#1b8552;border-color:#1b8552; }
+html[data-theme="dark"] .btn-quiet { background:transparent;border-color:transparent; }
+html[data-theme="dark"] .btn-danger { background:#39252a;border-color:#654048;color:#ffb8c0; }
+html[data-theme="dark"] .filter-pill { background:#212a25;border-color:#39443d;color:#bac6be; }
+html[data-theme="dark"] .filter-pill.active { background:#254a32;border-color:#356b48;color:#c9f3d4; }
+html[data-theme="dark"] .badge { background:#27312a;border-color:#3a493e;color:#d7e2d9; }
+html[data-theme="dark"] .badge-purple,html[data-theme="dark"] .badge-green { background:#1f3b29;border-color:#315c3d;color:#baf2ca; }
+html[data-theme="dark"] .badge-red { background:#3a2529;border-color:#624047;color:#ffb6bf; }
+html[data-theme="dark"] .badge-amber { background:#3a3020;border-color:#5a482b;color:#f6d58f; }
+html[data-theme="dark"] .badge-blue { background:#20323b;border-color:#345362;color:#b5e0f5; }
+html[data-theme="dark"] .topic-status { background:#27312b;border-color:#3e4a41;color:#d1ddd4; }
+html[data-theme="dark"] .topic-status.exam-ready { background:#1f3c2b;border-color:#316c46;color:#baf2ca; }
+html[data-theme="dark"] .topic-status.needs-revision { background:#3a2529;border-color:#624047;color:#ffb6bf; }
+html[data-theme="dark"] .topic-status.recall-passed { background:#20323b;border-color:#345362;color:#b5e0f5; }
+html[data-theme="dark"] .priority-high { background:#3a2529;color:#ffb6bf; }
+html[data-theme="dark"] .priority-medium { background:#3a3020;color:#f6d58f; }
+html[data-theme="dark"] .priority-low { background:#20323b;color:#b5e0f5; }
+html[data-theme="dark"] .unit-number { background:#20402c;border-color:#34694a;color:#c4efcf; }
+html[data-theme="dark"] .exam-date-block { background:#223c2d;border-color:#315b41;color:#d7f4df; }
+html[data-theme="dark"] .exam-date-block small { color:#a8cfb4; }
+html[data-theme="dark"] .subject-percent,html[data-theme="dark"] .exam-countdown { color:#91e1ad; }
+html[data-theme="dark"] .topic-check,html[data-theme="dark"] .task-toggle { background:#222c26;border-color:#49594d;color:#fff; }
+html[data-theme="dark"] .topic-check.checked,html[data-theme="dark"] .task-toggle.checked { background:#1b9952;border-color:#1b9952; }
+html[data-theme="dark"] .answer-option.correct { background:#1b3828;border-color:#3b8051; }
+html[data-theme="dark"] .answer-option.wrong { background:#3a2529;border-color:#7c4650; }
+html[data-theme="dark"] .option-letter { background:#222c26;border-color:#445148;color:#d5e1d7; }
+html[data-theme="dark"] .answer-option.correct .option-letter { background:#1b9952;border-color:#1b9952;color:#fff; }
+html[data-theme="dark"] .answer-option.wrong .option-letter { background:#ae3d52;border-color:#ae3d52;color:#fff; }
+html[data-theme="dark"] .empty-state { background:#1c2420;border-color:#43554a;color:#b6c4bb; }
+html[data-theme="dark"] .empty-state strong { color:#f0f5f1; }
+html[data-theme="dark"] .choice-card.selected { background:#21452e;border-color:#64b982; }
+html[data-theme="dark"] .nav-item { color:#b0bbb3; }
+html[data-theme="dark"] .nav-item.active { background:#24452f;border-color:#315d3e;color:#c7f4d3; }
+html[data-theme="dark"] .privacy-tile { background:#1c3224;border-color:#315b3e; }
+html[data-theme="dark"] .privacy-tile strong { color:#c6f2d1; }
+html[data-theme="dark"] .privacy-tile small { color:#a0c8ac; }
+.exam-checklist { padding:0 0 8px 64px; display:grid; gap:6px; }
+.exam-checklist input[type="checkbox"] { accent-color:#16824b; }
+html[data-theme="dark"] .exam-checklist input[type="checkbox"] { accent-color:#70d99a; }
+@media(max-width:560px){.exam-checklist{padding-left:53px;}}
