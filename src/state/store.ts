@@ -87,7 +87,7 @@ function migrateOldLocalStorage():Partial<StudentStateRecord>|undefined {
       ...(old.mistakes||[]).map(n=>({...n,pinned:false,title:'Correction: '+n.title,subjectId:undefined,topicId:n.topic,createdAt:n.createdAt?Date.parse(n.createdAt):Date.now(),updatedAt:Date.now()}))];
     base.notes=noteRows;
     base.bookmarks=(old.bookmarks||[]).filter(id=>!id.startsWith('topic:'));
-    base.profile={...base.profile,name:old.prefs?.name||'',onboardingCompleted:Boolean(old.onboarded),subjectPreparation:defaultPreparation(),
+    base.profile={...base.profile,name:old.prefs?.name||'',onboardingCompleted:Boolean(old.onboarded),goal:(old.prefs?.mode==='Marks-focused'?'marks':old.prefs?.mode==='Crash course'?'important':'pass') as Goal,subjectPreparation:defaultPreparation(),
       updatedAt:Date.now(),theme:old.prefs?.theme==='dark'?'dark':'system'};
     for(const exam of EXAMS) {
       const subject=exam.id;
@@ -199,7 +199,7 @@ export const useStudentStore=create<Store>((set,get)=>({
     const topicProgress={...s.topicProgress,[task.topicId]:{id:task.topicId,status:topic?.status==='mastered'?'mastered' as const:'learning' as const,
       selfReportedMinutes:topic?.selfReportedMinutes||0,lastStudiedAt:Date.now(),updatedAt:Date.now()}};
     const result=reviseFuturePlan({...planInput({...s,tasks,topicProgress} as Store),previousTasks:tasks,topicProgress});
-    updateAndPersist(set,get,{tasks,topicProgress,tasks:result.tasks,planReason:'Future work was recalculated after task completion. '+result.explanation,lastPlanAt:Date.now()});
+    updateAndPersist(set,get,{topicProgress,tasks:result.tasks,planReason:'Future work was recalculated after task completion. '+result.explanation,lastPlanAt:Date.now()});
   },
   postponeTask(id){
     const s=get(),task=s.tasks.find(t=>t.id===id);if(!task||task.locked||task.status==='completed')return;
