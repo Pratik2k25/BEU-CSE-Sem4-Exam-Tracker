@@ -55,7 +55,7 @@ export interface StudentStateRecord {
 }
 class StudyDatabase extends Dexie {
   kv!: Table<KvRow, string>;
-  profiles!: Table<StudentProfile, string>;
+  profiles!: Table<StudentProfile & { id: string }, string>;
   tasks!: Table<StudyTask, string>;
   attempts!: Table<PracticeAttempt, string>;
   topicProgress!: Table<TopicProgressRecord, string>;
@@ -69,7 +69,7 @@ class StudyDatabase extends Dexie {
     super('beu-exam-prep-local');
     this.version(1).stores({ kv: '&key' });
     this.version(2).stores({
-      kv: '&key', profiles: '&name', tasks: '&id,date,subjectId,status,locked',
+      kv: '&key', profiles: '&id', tasks: '&id,date,subjectId,status,locked',
       attempts: '&id,date,subjectId', topicProgress: '&id,status,updatedAt',
       sessions: '&id,subjectId,status,startedAt', notes: '&id,subjectId,topicId,updatedAt',
       pdfs: '&id,subjectId,topicId,createdAt', bookmarks: '&id,createdAt',
@@ -86,7 +86,8 @@ export const db = new StudyDatabase();
 export async function persistStudentState(state: StudentStateRecord): Promise<void> {
   await db.transaction('rw', db.kv, db.profiles, db.tasks, db.attempts, db.topicProgress, db.sessions, db.notes, db.bookmarks, db.revisions, async () => {
     await db.kv.put({ key: 'student', value: state, updatedAt: Date.now() });
-    await db.profiles.put(state.profile, state.profile.name || 'student');
+    await Promise.all([db.profiles.clear(),db.tasks.clear(),db.attempts.clear(),db.topicProgress.clear(),db.sessions.clear(),db.notes.clear(),db.bookmarks.clear(),db.revisions.clear()]);
+    await db.profiles.put({ ...state.profile, id: 'student' });
     if (state.tasks.length) await db.tasks.bulkPut(state.tasks);
     if (state.attempts.length) await db.attempts.bulkPut(state.attempts);
     const topicRows = Object.values(state.topicProgress);
