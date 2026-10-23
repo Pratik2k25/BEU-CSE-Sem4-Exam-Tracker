@@ -165,7 +165,8 @@ document.addEventListener('click',e=>{
  const toggle=e.target.closest('[data-plan-toggle]');if(toggle){const id=toggle.dataset.planToggle;state.dayDone[id]=!state.dayDone[id];save();render();return;}
  const quick=e.target.closest('[data-quick-toggle]');if(quick){const t=topicById(quick.dataset.quickToggle);if(t)topicStatusSet(t.id,recalled(t)?'Practiced':'Recall passed');return;}
  const note=e.target.closest('[data-topic-note]');if(note){showModal(noteModal('note',note.dataset.topicNote));return;}
- const mistake=e.target.closest('[data-topic-mistake]');if(mistake){showModal(noteModal('mistake',mistake.dataset.topicMistake));return;}\n const questionMistake=e.target.closest('[data-question-mistake]');if(questionMistake){const q=questionBank().find(x=>x.id===questionMistake.dataset.questionMistake);showModal(noteModal('mistake',''));return;}
+ const mistake=e.target.closest('[data-topic-mistake]');if(mistake){showModal(noteModal('mistake',mistake.dataset.topicMistake));return;}
+ const questionMistake=e.target.closest('[data-question-mistake]');if(questionMistake){const q=questionBank().find(x=>x.id===questionMistake.dataset.questionMistake);showModal(noteModal('mistake',''));return;}
  const subjBtn=e.target.closest('[data-subject-filter]');if(subjBtn){subjectFilter=subjBtn.dataset.subjectFilter;render();return;}
  const typeBtn=e.target.closest('[data-type-filter]');if(typeBtn){questionType=typeBtn.dataset.typeFilter;render();return;}
  const bmark=e.target.closest('[data-bookmark]');if(bmark){const id=bmark.dataset.bookmark;state.bookmarks.includes(id)?state.bookmarks=state.bookmarks.filter(x=>x!==id):state.bookmarks.push(id);save();render();toast(state.bookmarks.includes(id)?'Added to saved items.':'Removed from saved items.');return;}
