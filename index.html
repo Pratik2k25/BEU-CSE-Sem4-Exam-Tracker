@@ -3,77 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#17191e">
-<meta name="color-scheme" content="dark">
-<title>BEU CSE Semester 4 Exam Tracker | Study Planner, Syllabus & PYQs</title>
-<meta name="description" content="A free, mobile-first BEU B.Tech CSE 4th semester study planner with exam dates, unit-wise syllabus checklist, topic priorities, question practice, quizzes and private local progress tracking.">
-<meta name="keywords" content="BEU CSE 4th semester, Bihar Engineering University semester 4, BEU exam routine 2026, BEU CSE syllabus, BEU PYQ, BTech CSE semester 4 exam preparation, COA 105401, FLAT 105402, DAA 105403, DBMS 105404, ETC 105405, Computer Networks 105406">
+<meta name="theme-color" content="#f5f7f9">
+<meta name="color-scheme" content="light">
+<title>BEU Exam Prep | BEU B.Tech CSE Semester 4 Study Planner, Syllabus & PYQs</title>
+<meta name="description" content="BEU Exam Prep is a free, installable study companion for B.Tech CSE Semester 4. Plan study sessions, track unit-wise syllabus, practise curated PYQ-style questions, revise mistakes and measure actual recall.">
+<meta name="keywords" content="BEU Exam Prep, BEU CSE 4th semester, Bihar Engineering University semester 4, BEU CSE syllabus, BEU PYQ, BTech CSE semester 4 exam preparation, COA 105401, FLAT 105402, DAA 105403, DBMS 105404, ETC 105405, Computer Networks 105406">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://beu-cse-sem4-exam-tracker.vercel.app/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/app-icon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="preload" href="/styles.css" as="style">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <meta property="og:type" content="website"><meta property="og:locale" content="en_IN">
-<meta property="og:site_name" content="BEU CSE Semester 4 Exam Tracker">
-<meta property="og:title" content="BEU CSE Semester 4 Exam Tracker — Plan. Practise. Recall.">
-<meta property="og:description" content="Make a realistic study plan, track the complete BEU CSE Semester 4 syllabus, practise MCQs and long answers, and measure your recall.">
+<meta property="og:site_name" content="BEU Exam Prep">
+<meta property="og:title" content="BEU Exam Prep — Plan. Practise. Recall.">
+<meta property="og:description" content="A personal study workspace for BEU B.Tech CSE Semester 4: syllabus, planner, question practice, revision and progress.">
 <meta property="og:url" content="https://beu-cse-sem4-exam-tracker.vercel.app/">
 <meta property="og:image" content="https://beu-cse-sem4-exam-tracker.vercel.app/assets/app-icon.svg">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="BEU CSE Semester 4 Exam Tracker">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="BEU Exam Prep">
 <meta name="twitter:description" content="A local-first study companion for BEU B.Tech CSE Semester 4 exams.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BEU CSE Semester 4 Exam Tracker","applicationCategory":"EducationalApplication","operatingSystem":"Web, Android, iOS, Windows, macOS, Linux","description":"Free installable study planner for Bihar Engineering University B.Tech CSE Semester 4 with syllabus tracking, exam schedule, practice questions, quizzes, notes and local storage.","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"inLanguage":["en","hi"],"featureList":["Personalized study plan","Unit-wise syllabus tracker","Exam schedule","MCQ quizzes and long-answer practice","Local browser persistence","Offline-ready app shell"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BEU Exam Prep","applicationCategory":"EducationalApplication","operatingSystem":"Web, Android, iOS, Windows, macOS, Linux","description":"Free installable study planner for Bihar Engineering University B.Tech CSE Semester 4 with syllabus tracking, exam schedule, question practice, quizzes, notes and local storage.","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"inLanguage":["en"],"featureList":["Personalized study plan","Unit-wise syllabus tracker","Exam schedule","Practice questions and quizzes","Revision and mistakes notebook","Local browser persistence","Offline-ready app shell"]}</script>
 </head>
 <body>
 <a class="skip-link" href="#page-content">Skip to content</a>
 <div class="app-shell">
-  <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
-    <a class="brand" href="/" data-page="dashboard" aria-label="BEU Exam Desk home">
-      <img src="/assets/logo.svg" alt="" width="42" height="42">
-      <span class="brand-wordmark">BEU EXAM<span class="brand-wordmark-accent">DESK</span><small>CSE · SEMESTER 04</small></span>
-    </a>
-    <div class="nav-section-label">Your workspace</div>
-    <nav class="primary-nav">
-      <button class="nav-item active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Overview</span><kbd>1</kbd></button>
-      <button class="nav-item" data-page="syllabus"><span class="nav-icon">▤</span><span>Syllabus tracker</span></button>
-      <button class="nav-item" data-page="planner"><span class="nav-icon">▦</span><span>Study planner</span></button>
-      <button class="nav-item" data-page="practice"><span class="nav-icon">✎</span><span>Question bank</span></button>
-      <button class="nav-item" data-page="quiz"><span class="nav-icon">◉</span><span>Quiz & mock test</span></button>
-      <button class="nav-item" data-page="notes"><span class="nav-icon">▧</span><span>Notes & mistakes</span></button>
-      <button class="nav-item" data-page="resources"><span class="nav-icon">↗</span><span>Resources</span></button>
-    </nav>
-    <div class="nav-section-label nav-section-settings">Personal</div>
-    <nav class="primary-nav"><button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>Preferences & backup</span></button></nav>
-    <div class="sidebar-spacer"></div>
-    <div class="privacy-tile"><span class="privacy-dot"></span><div><strong>Your progress is private</strong><small>Saved in this browser · no login</small></div></div>
-    <div class="sidebar-footer"><span>BEU CSE · 4th Semester</span><span class="version-label">V2 · LOCAL-FIRST</span></div>
-  </aside>
-
-  <div class="main-shell">
-    <header class="topbar">
-      <div class="mobile-brand"><img src="/assets/favicon.svg" width="32" height="32" alt=""><span>BEU <b>EXAM DESK</b></span></div>
-      <div class="breadcrumbs"><span id="crumb-parent">My workspace</span><span class="crumb-slash">/</span><strong id="crumb-current">Overview</strong></div>
-      <div class="topbar-actions">
-        <span class="save-indicator"><i></i><span id="save-status">Saved locally</span></span>
-        <button class="icon-button" id="install-button" type="button" title="Install app" aria-label="Install app" hidden>⇩</button>
-        <button class="avatar-button" id="open-preferences" type="button" title="Edit study preferences"><span id="avatar-initials">S</span></button>
-      </div>
-    </header>
-    <main id="page-content" class="page-content" tabindex="-1" aria-live="polite"></main>
-    <footer class="app-footer"><span>Made for focused BEU CSE Semester 4 preparation.</span><button type="button" class="footer-link" data-page="settings">Privacy & backup</button></footer>
-  </div>
+<aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+<a class="brand" href="#/dashboard" data-go="#/dashboard" aria-label="BEU Exam Prep home">
+<img src="/assets/logo.svg" alt="" width="42" height="42">
+<span class="brand-wordmark">BEU <span class="brand-wordmark-accent">EXAM PREP</span><small>STUDENT WORKSPACE</small></span>
+</a>
+<div class="nav-section-label">Study workspace</div>
+<nav class="primary-nav">
+<button class="nav-item active" data-go="#/dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
+<button class="nav-item" data-go="#/subjects"><span class="nav-icon">▤</span><span>My subjects</span></button>
+<button class="nav-item" data-go="#/syllabus"><span class="nav-icon">☑</span><span>Syllabus tracker</span></button>
+<button class="nav-item" data-go="#/planner"><span class="nav-icon">▦</span><span>Study planner</span></button>
+<button class="nav-item" data-go="#/pyqs"><span class="nav-icon">✎</span><span>PYQ bank</span></button>
+<button class="nav-item" data-go="#/practice"><span class="nav-icon">◉</span><span>Practice & tests</span></button>
+</nav>
+<div class="nav-section-label nav-section-settings">Revision & library</div>
+<nav class="primary-nav">
+<button class="nav-item" data-go="#/revision"><span class="nav-icon">↻</span><span>Revision hub</span></button>
+<button class="nav-item" data-go="#/resources"><span class="nav-icon">▧</span><span>Study resources</span></button>
+<button class="nav-item" data-go="#/exams"><span class="nav-icon">▣</span><span>Exam calendar</span></button>
+<button class="nav-item" data-go="#/progress"><span class="nav-icon">◴</span><span>My progress</span></button>
+<button class="nav-item" data-go="#/saved"><span class="nav-icon">★</span><span>Saved items</span></button>
+<button class="nav-item" data-go="#/notes"><span class="nav-icon">▤</span><span>Notes & mistakes</span></button>
+</nav>
+<div class="sidebar-spacer"></div>
+<div class="privacy-tile"><span class="privacy-dot"></span><div><strong>Your progress stays private</strong><small>Saved on this device · no login</small></div></div>
+<div class="sidebar-footer"><span>BEU CSE · Semester 04</span><span class="version-label">V2 STUDENT</span></div>
+</aside>
+<div class="main-shell">
+<header class="topbar">
+<div class="mobile-brand"><img src="/assets/favicon.svg" width="32" height="32" alt=""><span>BEU <b>EXAM PREP</b></span></div>
+<div class="breadcrumbs"><span id="crumb-parent">My workspace</span><span class="crumb-slash">/</span><strong id="crumb-current">Home</strong></div>
+<div class="topbar-actions"><span class="save-indicator"><i></i><span id="save-status">Saved on this device</span></span><button class="icon-button" id="install-button" type="button" title="Install app" aria-label="Install app" hidden>⇩</button><button class="avatar-button" id="open-preferences" type="button" title="Profile and settings"><span id="avatar-initials">S</span></button></div>
+</header>
+<main id="page-content" class="page-content" tabindex="-1" aria-live="polite"></main>
+<footer class="app-footer"><span>BEU Exam Prep · Study with evidence, not guesses.</span><button type="button" class="footer-link" data-go="#/settings">Privacy & backup</button></footer>
 </div>
-
-<nav class="mobile-nav" aria-label="Mobile navigation">
-  <button data-page="dashboard" class="active"><span>⌂</span><small>Home</small></button>
-  <button data-page="syllabus"><span>▤</span><small>Syllabus</small></button>
-  <button data-page="planner"><span>▦</span><small>Plan</small></button>
-  <button data-page="practice"><span>✎</span><small>Practice</small></button>
-  <button id="mobile-more" type="button"><span>•••</span><small>More</small></button>
+</div>
+<nav class="mobile-nav" aria-label="Primary mobile navigation">
+<button data-go="#/dashboard" class="active"><span>⌂</span><small>Home</small></button>
+<button data-go="#/subjects"><span>▤</span><small>Subjects</small></button>
+<button data-go="#/pyqs"><span>✎</span><small>PYQs</small></button>
+<button data-go="#/practice"><span>◉</span><small>Practice</small></button>
+<button id="mobile-more" type="button"><span>•••</span><small>More</small></button>
 </nav>
 <div id="modal-root"></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <script src="/data.js"></script>
-<script src="/app.js" defer></script>
-</body></html>
+<script src="/app.js"></script>
+</body>
+</html>
