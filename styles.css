@@ -162,3 +162,26 @@ html[data-theme="dark"] .privacy-tile small { color:#a0c8ac; }
 .exam-checklist input[type="checkbox"] { accent-color:#16824b; }
 html[data-theme="dark"] .exam-checklist input[type="checkbox"] { accent-color:#70d99a; }
 @media(max-width:560px){.exam-checklist{padding-left:53px;}}
+
+/* V2 MCQ controls and OpenCanteen-inspired five-tab navigation */
+.answer-option.selected { border-color:#16824b; background:#e7f8ed; box-shadow:inset 0 0 0 1px #16824b22; }
+.answer-option.selected .option-letter { border-color:#16824b; background:#16824b; color:#fff; }
+.filter-pill.answered { color:#11643b; border-color:#a9d9b8; background:#e7f8ed; box-shadow:inset 0 0 0 1px #bde5c9; }
+.mobile-nav { display:flex; align-items:stretch; justify-content:space-between; gap:3px; }
+.mobile-nav button { flex:0 0 clamp(40px,13vw,54px); flex-direction:column; gap:1px; min-width:0; padding:0 5px; transition:flex .18s ease,background .18s ease,color .18s ease; }
+.mobile-nav button:not(.active) small { display:none; }
+.mobile-nav button.active { flex:1 1 auto; flex-direction:row; gap:7px; padding:0 12px; }
+.mobile-nav button.active small { display:block; }
+@media(max-width:560px) {
+ .mobile-nav { display:flex; }
+ .mobile-nav button { flex:0 0 clamp(39px,12vw,48px); flex-direction:column; gap:1px; padding:0 3px; }
+ .mobile-nav button.active { flex:1 1 auto; flex-direction:row; gap:5px; padding:0 8px; }
+ .mobile-nav button:not(.active) small { display:none; }
+ .mobile-nav button.active small { display:block; font-size:10px; }
+}
+@media(max-width:350px) {
+ .mobile-nav { width:calc(100vw - 14px); gap:2px; padding:5px; }
+ .mobile-nav button { flex-basis:38px; }
+ .mobile-nav button.active { padding:0 6px; gap:4px; }
+ .mobile-nav button.active small { font-size:9px; }
+}
