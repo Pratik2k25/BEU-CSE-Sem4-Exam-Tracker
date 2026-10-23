@@ -18,7 +18,7 @@ export interface PracticeAttempt {
   id: string; date: string; subjectId: SubjectId | 'ALL'; total: number;
   attempted: number; correct: number; incorrect: number; unanswered: number;
   accuracy: number; scorePercent: number; durationSeconds: number; timed: boolean;
-  questionIds: string[]; answers: Record<string, number>; topicPerformance: Record<string, { attempted: number; correct: number; incorrect: number }>;
+  questionIds: string[]; answers: Record<string, number>; items?: import('../data/content').Question[]; topicPerformance: Record<string, { attempted: number; correct: number; incorrect: number }>;
 }
 export interface StudySession {
   id: string; taskId?: string; topicId?: string; subjectId: SubjectId;
