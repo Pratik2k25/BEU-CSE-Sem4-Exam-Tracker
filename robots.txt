@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://beu-exam-study-tracker.netlify.app/sitemap.xml
