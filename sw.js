@@ -1,6 +1,6 @@
-const CACHE = 'beu-exam-prep-shell-v2';
+const CACHE = 'beu-exam-prep-shell-v3';
 const SHELL = [
-  '/', '/index.html', '/styles.css', '/app.js', '/data.js',
+  '/', '/index.html', '/styles.css', '/app.js', '/data.js', '/pyq-mcqs.js',
   '/manifest.webmanifest', '/assets/logo.svg', '/assets/favicon.svg',
   '/assets/app-icon.svg', '/robots.txt', '/sitemap.xml'
 ];
