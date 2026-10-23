@@ -280,3 +280,30 @@ window.STUDY_DATA = {
   {id:"etc6",s:"ETC",type:"Long",q:"Write a formal email and explain the principles of professional email etiquette.",outline:["Use a precise subject line, courteous salutation and clear purpose.","Place the request/action and essential context early; keep paragraphs short.","Check recipients, attachments, tone, grammar, confidentiality and reply-all use.","Close professionally with the sender’s identity; avoid slang and unnecessary urgency."],evidence:"Email etiquette and business/technical writing appear in the supplied ETC syllabus."}
  ]
 };
+
+
+// Source-checked MCQs transcribed from the uploaded COA paper images.
+// Course code and source semester are retained so the app does not silently
+// equate a historical paper with every current course outline.
+window.STUDY_DATA.questions.push(
+  {
+    id:"coa-pyq-2022-q1a", s:"COA", type:"MCQ",
+    q:"The 8-bit encoding format used to store data in a computer is:",
+    o:["ASCII","EBCDIC","ANCI","USCI"], a:1,
+    e:"EBCDIC uses an 8-bit character code. Standard ASCII is a 7-bit code.",
+    marks:2, year:2022, semester:4, courseCode:"105401/106401",
+    paper:"B.Tech 4th Semester Examination, 2022 (New Course)",
+    sourceName:"COA PYQ.pdf", sourcePage:1,
+    sourceType:"Original PYQ · 4th Sem 2022", verifiedSource:true
+  },
+  {
+    id:"coa-pyq-2022-q1b", s:"COA", type:"MCQ",
+    q:"The bus used to connect the monitor to the CPU is:",
+    o:["PCI bus","SCSI bus","Memory bus","RAM bus"], a:0,
+    e:"Of the listed options, PCI is the bus associated with connecting an expansion/display adapter to the system. The exact wording and options are transcribed from the uploaded paper; confirm with your class notes if the question is discussed differently.",
+    marks:2, year:2022, semester:4, courseCode:"105401/106401",
+    paper:"B.Tech 4th Semester Examination, 2022 (New Course)",
+    sourceName:"COA PYQ.pdf", sourcePage:2,
+    sourceType:"Original PYQ · 4th Sem 2022", verifiedSource:true
+  }
+);

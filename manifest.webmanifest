@@ -1,28 +1,18 @@
 {
   "id": "/",
-  "name": "BEU CSE Semester 4 Exam Tracker",
-  "short_name": "BEU Sem 4",
-  "description": "Private local study planner and syllabus tracker for BEU CSE semester 4.",
+  "name": "BEU Exam Prep",
+  "short_name": "BEU Prep",
+  "description": "A private, local-first study planner, syllabus tracker and practice companion for BEU B.Tech CSE Semester 4.",
   "lang": "en-IN",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "background_color": "#111216",
-  "theme_color": "#17191e",
-  "categories": [
-    "education",
-    "productivity"
-  ],
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f5f7f9",
+  "theme_color": "#12643d",
+  "categories": ["education", "productivity"],
   "icons": [
-    {
-      "src": "/assets/app-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src": "/assets/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
   ]
 }
