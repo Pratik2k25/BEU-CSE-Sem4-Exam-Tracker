@@ -206,7 +206,7 @@ function quizResultPage(){
  const topicStats=Object.values(topicMap).sort((a,b)=>(a.correct/Math.max(1,a.attempted))-(b.correct/Math.max(1,b.attempted)));
  return heading('MCQ test results','Your score and accuracy are based on this completed attempt. Descriptive answer marks are not inferred from MCQ scores.','<button class="btn" data-go="#/progress">See overall progress →</button>')+
  '<div class="grid grid-4">'+metric('✓',pct+'%','Score','Correct out of all questions')+metric('◉',accuracy+'%','Accuracy','Correct out of attempted','mint')+metric('✎',attempted,'Attempted','Answers submitted','blue')+metric('↷',unanswered,'Skipped','Unanswered questions','amber')+'</div>'+
- '<section class="panel" style="margin-top:14px"><div class="question-top"><div><h2>'+(pct>=80?'Strong recall':pct>=60?'Good base—review weak topics':'Use this attempt as your revision map')+'</h2><p class="muted text-sm">'+esc(quizState.subject==='ALL'?'All six subjects':subj(quizState.subject)?.name||quizState.subject)+' · '+items.length+' questions · '+(quizState.timed?'Timed':'Untimed')+' · '+Math.max(0,Math.round((quizState.finishedAt||Date.now()-quizState.started)/1000/60))+' min</p></div>'+badge('Saved locally','green')+'</div><div class="task-actions"><button class="btn btn-primary" data-action="restart-quiz">New set with same filters</button><button class="btn" data-action="end-quiz">Back to practice</button><button class="btn btn-quiet" data-go="#/revision">Review queue →</button></div></section>'+
+ '<section class="panel" style="margin-top:14px"><div class="question-top"><div><h2>'+(pct>=80?'Strong recall':pct>=60?'Good base—review weak topics':'Use this attempt as your revision map')+'</h2><p class="muted text-sm">'+esc(quizState.subject==='ALL'?'All six subjects':subj(quizState.subject)?.name||quizState.subject)+' · '+items.length+' questions · '+(quizState.timed?'Timed':'Untimed')+' · '+Math.max(0,Math.round(((quizState.finishedAt||Date.now())-(quizState.startedAt||quizState.started||Date.now()))/60000))+' min</p></div>'+badge('Saved locally','green')+'</div><div class="task-actions"><button class="btn btn-primary" data-action="restart-quiz">New set with same filters</button><button class="btn" data-action="end-quiz">Back to practice</button><button class="btn btn-quiet" data-go="#/revision">Review queue →</button></div></section>'+
  '<div class="section-heading"><div><h2>Topic-wise performance</h2><p>Weak topics are added to the revision queue when a related answer is missed.</p></div></div><div class="grid grid-3">'+topicStats.map(t=>'<section class="panel"><h3>'+esc(t.label)+'</h3><div class="metric-value">'+(t.attempted?Math.round(t.correct/t.attempted*100)+'%':'—')+'</div><p class="muted text-xs">'+t.correct+'/'+t.attempted+' correct · '+t.total+' question(s)</p>'+meter(t.attempted?100*t.correct/t.attempted:0)+(t.attempted&&t.correct<t.attempted?'<button class="btn btn-sm" style="margin-top:9px" data-action="topic-revise" data-topic="'+esc(t.key)+'">Add topic to revision</button>':'')+'</section>').join('')+'</div>'+
  '<div class="section-heading"><div><h2>Review all questions</h2><p>Correct answers and explanations are revealed after submission.</p></div></div>'+items.map((q,i)=>{const ans=answers[q.id],wasAnswered=typeof ans==='number',correctAnswer=ans===q.a,m=questionMeta(q),topic=m.topic;return '<section class="panel question-card"><div class="question-top"><span class="question-kind">QUESTION '+(i+1)+' · '+esc(subj(q.s)?.short||q.s)+'</span>'+badge(!wasAnswered?'Skipped':correctAnswer?'Correct':'Incorrect',!wasAnswered?'amber':correctAnswer?'green':'red')+'</div><div class="question-prompt">'+esc(q.q)+'</div><div class="topic-detail">'+sourceBadge(q)+(topic?badge('Unit '+(topic.unitIndex+1)+' · '+topic.name):'')+'</div><div class="answer-feedback"><strong>Your answer:</strong> '+(wasAnswered?esc(q.o[ans]):'Not answered')+'<br><strong>Correct answer:</strong> '+esc(q.o[q.a])+'<br>'+esc(q.e||'No explanation was provided for this entry.')+'</div><div class="question-actions"><button class="btn btn-sm" data-bookmark="'+q.id+'">'+(state.bookmarks.includes(q.id)?'★ Saved':'☆ Bookmark')+'</button>'+(topic?'<button class="btn btn-sm" data-action="topic-revise" data-topic="'+topic.id+'">Add topic to revision</button>':'')+'</div></section>';}).join('');
 }
@@ -294,7 +294,7 @@ function startQuiz(){
  const items=selected.map(q=>{
   const pairs=q.o.map((text,index)=>({text,index}));
   const ordered=practiceShuffleChoices?shuffleCopy(pairs):pairs;
-  return {...q,o:ordered.map(x=>x.text),a:ordered.findIndex(x=>x.index===q.a),topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null};
+  return {...q,originalOptions:q.o.slice(),originalAnswer:q.a,choiceOrder:ordered.map(x=>x.index),o:ordered.map(x=>x.text),a:ordered.findIndex(x=>x.index===q.a),topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null};
  });
  const minutes=practiceTimed?Math.max(1,Number(practiceMinutes)||30):null,now=Date.now();
  quizState={
@@ -321,8 +321,9 @@ function resumeQuiz(){
 }
 function finishQuiz(force=false){
  if(!quizState||quizState.done)return;
- const total=quizState.items.length,answers=quizState.answers||{},attempted=quizState.items.filter(q=>typeof answers[q.id]==='number').length,unanswered=total-attempted,correct=quizState.items.filter(q=>answers[q.id]===q.a).length;
+ const total=quizState.items.length,displayAnswers=quizState.answers||{},attempted=quizState.items.filter(q=>typeof displayAnswers[q.id]==='number').length,unanswered=total-attempted,correct=quizState.items.filter(q=>displayAnswers[q.id]===q.a).length;
  if(!force&&unanswered>0&&!confirm('You have '+unanswered+' unanswered question(s). Submit anyway and reveal the answer key?'))return;
+ const normalizedAnswers={};quizState.items.forEach(q=>{const shown=displayAnswers[q.id];if(typeof shown==='number')normalizedAnswers[q.id]=q.choiceOrder?q.choiceOrder[shown]:shown;});
  stopQuizTimer();
  const now=Date.now();
  if(quizState.segmentStartedAt){quizState.activeSecondsAccumulated=(quizState.activeSecondsAccumulated||0)+(now-quizState.segmentStartedAt)/1000;quizState.segmentStartedAt=null;}
@@ -331,18 +332,18 @@ function finishQuiz(force=false){
   const meta=questionMeta(q),topic=meta.topic,key=topic?.id||q.topicId||null;
   if(!key)return;
   if(!topicMap[key])topicMap[key]={topicId:key,label:topic?.name||q.q,subject:q.s,total:0,attempted:0,correct:0,incorrect:0,unanswered:0};
-  const x=topicMap[key];x.total++;
-  if(typeof answers[q.id]!=='number')x.unanswered++;
-  else {x.attempted++;if(answers[q.id]===q.a)x.correct++;else x.incorrect++;}
+  const x=topicMap[key],ans=displayAnswers[q.id];x.total++;
+  if(typeof ans!=='number')x.unanswered++;
+  else {x.attempted++;if(ans===q.a)x.correct++;else x.incorrect++;}
  });
  quizState.items.forEach(q=>{
-  const ans=answers[q.id];
-  if(typeof ans==='number')state.questionAnswers[q.id]=ans;
+  const ans=displayAnswers[q.id],normalized=normalizedAnswers[q.id];
+  if(typeof normalized==='number')state.questionAnswers[q.id]=normalized;
   const topic=questionMeta(q).topic||topicById(q.topicId);
   if(topic&&typeof ans==='number'&&ans!==q.a)state.flashcards[topic.id]={due:today(),interval:1,reason:'incorrect-mcq',questionId:q.id};
  });
- const savedItems=quizState.items.map(q=>({id:q.id,s:q.s,type:'MCQ',q:q.q,o:q.o,a:q.a,e:q.e,marks:questionMarks(q),year:q.year||null,semester:q.semester||null,courseCode:q.courseCode||null,paper:q.paper||null,sourceName:q.sourceName||null,sourcePage:q.sourcePage||null,paperPage:q.paperPage||null,sourceType:q.sourceType||'Curated practice',verifiedSource:!!q.verifiedSource,answerVerified:q.answerVerified!==false,topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null,priority:q.priority||null,difficulty:q.difficulty||'Medium'}));
- const record={id,date:today(),attemptType:'mcq-practice',subject:quizState.subject,correct,total,attempted,unanswered,accuracy,percent,duration:Math.round(durationSeconds/60),durationSeconds,timed:!!quizState.timed,timeLimitMinutes:quizState.timeLimitMinutes||null,filters:quizState.filtersSummary||{},answers:{...answers},items:savedItems,topicPerformance:Object.values(topicMap),finishedAt:now,startedAt:quizState.startedAt||quizState.started};
+ const savedItems=quizState.items.map(q=>({id:q.id,s:q.s,type:'MCQ',q:q.q,o:q.originalOptions||q.o,a:q.originalAnswer??q.a,e:q.e,marks:questionMarks(q),year:q.year||null,semester:q.semester||null,courseCode:q.courseCode||null,paper:q.paper||null,sourceName:q.sourceName||null,sourcePage:q.sourcePage||null,paperPage:q.paperPage||null,sourceType:q.sourceType||'Curated practice',verifiedSource:!!q.verifiedSource,answerVerified:q.answerVerified!==false,topicId:q.topicId||QUESTION_TOPIC_MAP[q.id]||null,priority:q.priority||null,difficulty:q.difficulty||'Medium'}));
+ const record={id,date:today(),attemptType:'mcq-practice',subject:quizState.subject,correct,total,attempted,unanswered,accuracy,percent,duration:Math.round(durationSeconds/60),durationSeconds,timed:!!quizState.timed,timeLimitMinutes:quizState.timeLimitMinutes||null,filters:quizState.filtersSummary||{},answers:normalizedAnswers,items:savedItems,topicPerformance:Object.values(topicMap),finishedAt:now,startedAt:quizState.startedAt||quizState.started};
  state.scores.push(record);state.activeQuiz=null;
  quizState={...quizState,...record,done:true,status:'submitted',finishedAt:now,correct,attempted,unanswered,accuracy,percent,topicPerformance:record.topicPerformance};
  save();go('#/results/'+id);
