@@ -331,3 +331,5 @@ export const useStudentStore=create<Store>((set,get)=>({
   }
 }));
 export function allTopicCountBySubject(){return Object.fromEntries(SUBJECT_IDS.map(id=>[id,TOPICS.filter(t=>t.subjectId===id).length]));}
+
+export async function flushStudentPersistence(): Promise<void> { await saveQueue; }
